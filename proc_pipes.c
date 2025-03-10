@@ -1,34 +1,28 @@
 #include "pipex.h"
 
-void	ft_close_pipes(int	index, int cmds, int **pipes)
+void	ft_close_pipes(int	index, t_pipex	pipex)
 {
 	int	pip;
 
 	pip = 0;
-	while (pip < cmds - 1)
+	while (pip < pipex.cmds - 1)
 	{
 		if (pip + 1 != index)
-		{
-			close(pipes[pip][0]);
-			printf("pipe[%d][0] closed in process %d\n", pip, index);
-		}
+			close(pipex.pipes[pip][0]);
 		if (pip != index)
-		{
-			close(pipes[pip][1]);
-			printf("pipe[%d][1] closed in process %d\n", pip, index);
-		}
+			close(pipex.pipes[pip][1]);
 		pip++;
 	}
 }
 
-void	ft_handle_childs(int index, int **pipes, char **argv, char **paths)
+void	ft_handle_childs(int index, t_pipex pipex)
 {
 	if (index == 0)
-		ft_first_child(argv, pipes, index, paths);
-	else if (index == ft_param_size(argv) - 4)
-		ft_last_child(argv, pipes, index, paths);
+		ft_first_child(index, pipex);
+	else if (index == ft_param_size(pipex.arg) - 4)
+		ft_last_child(index, pipex);
 	else
-		ft_middle_childs(argv, pipes, index, paths);
+		ft_middle_childs(index, pipex);
 }
 
 int **ft_create_pipes(int cmds)
@@ -37,7 +31,7 @@ int **ft_create_pipes(int cmds)
 	int	i;
 
 	i = 0;
-	pipes = malloc(sizeof(int *) * cmds - 1);
+	pipes = malloc(sizeof(int *) * (cmds - 1));
 	if (pipes == NULL)
 		return (NULL);
 	while (i < cmds - 1)
@@ -60,16 +54,16 @@ int **ft_create_pipes(int cmds)
 	return (pipes);
 }
 
-void	ft_create_proc(int cmds, int **pipes, char **argv, char **paths)
+void	ft_create_proc(t_pipex	pipex)
 {
 	int	*pids;
 	int i;
 
 	i = 0;
-	pids = malloc(sizeof(int) * cmds);
+	pids = malloc(sizeof(int) * (pipex.cmds));
 	if (pids == NULL)
 		exit(1);
-	while (i < cmds) 
+	while (i < pipex.cmds)
 	{
 		pids[i] = fork();
 		if (pids[i] == -1)
@@ -79,16 +73,12 @@ void	ft_create_proc(int cmds, int **pipes, char **argv, char **paths)
 		}
 		if (pids[i] == 0)
 		{
-			printf("child created %d\n", i);
-			ft_close_pipes(i, cmds, pipes);
-			printf("all pipes closed in process %d\n", i);
-			printf("\n");
-			ft_handle_childs(i, pipes, argv, paths);
-			// printf("%d returned from hand\n", i);
-			printf("\n");
+			ft_close_pipes(i, pipex);
+			ft_handle_childs(i, pipex);
 			exit(1);
 		}
 		i++;
 	}
-	ft_wait(pids, cmds);
+	ft_close_parent_pipes(pipex);
+	ft_wait(pids, pipex);
 }

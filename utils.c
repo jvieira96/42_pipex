@@ -11,71 +11,47 @@
 
 #include "pipex.h"
 
-void ft_first_child(char **argv, int **pipes, int index, char **paths)
+void ft_first_child(int index, t_pipex pipex)
 {
-	char	buffer[BUFFER_SIZE];
 	int		fd;
-	int		bytesread;
 
-	fd = open(argv[1], O_RDONLY);
+	fd = open(pipex.arg[1], O_RDONLY);
 	if (fd == -1)
 	{
 		perror("error opening the file");
 		exit(1);
 	}
-	bytesread = read(fd, buffer, BUFFER_SIZE);
-	if (bytesread == -1)
-	{
-		perror("error reading file\n");
-		close(fd);
-		exit(2);
-	}
+	dup2(fd, STDIN_FILENO);
+	dup2(pipex.pipes[0][1], STDOUT_FILENO);	
 	close(fd);
-	dup2(pipes[0][1], STDOUT_FILENO);
-	close(pipes[0][1]);
-	ft_exec_command(index, argv, paths);
+	close(pipex.pipes[0][1]);
+	ft_exec_command(index, pipex);
 }
 
-void ft_last_child(char **argv, int **pipes, int index, char **paths)
+void ft_last_child(int index, t_pipex pipex)
 {
-	char	buffer[BUFFER_SIZE];
-	int		bytesread;
 	int		fd;
 
-	fd = open(argv[index + 3], O_WRONLY);
+	fd = open(pipex.arg[index + 3], O_WRONLY);
 	if (fd == -1)
 	{
 		perror("error opening the file\n");
 		exit(3);
 	}
-	bytesread = read(pipes[index - 1][0], buffer, BUFFER_SIZE);
-	if (bytesread == -1)
-	{
-		perror("error reading from pipe\n");
-		close(fd);
-		exit(4);
-	}
+	dup2(pipex.pipes[index - 1][0], STDIN_FILENO);
 	dup2(fd, STDOUT_FILENO);
-	close(pipes[index - 1][0]);
+	close(pipex.pipes[index - 1][0]);
 	close(fd);
-	ft_exec_command(index, argv, paths);
+	ft_exec_command(index, pipex);
 }
 
-void ft_middle_childs(char **argv, int **pipes, int index, char **paths)
+void ft_middle_childs(int index, t_pipex pipex)
 {
-	char	buffer[BUFFER_SIZE];
-	int		bytesread;
-
-	bytesread = read(pipes[index - 1][0], buffer, BUFFER_SIZE);
-	if (bytesread == -1)
-	{
-		perror("error reading file\n");
-		exit(5);
-	}
-	dup2(pipes[index][1], STDOUT_FILENO);
-	close(pipes[index - 1][0]);
-	close(pipes[index][1]);
-	ft_exec_command(index, argv, paths);
+	dup2(pipex.pipes[index - 1][0], STDIN_FILENO);
+	dup2(pipex.pipes[index][1], STDOUT_FILENO);
+	close(pipex.pipes[index - 1][0]);
+	close(pipex.pipes[index][1]);
+	ft_exec_command(index, pipex);
 }
 
 char *ft_get_path(char *envp[])
@@ -93,37 +69,39 @@ char *ft_get_path(char *envp[])
 	exit(6);
 }
 
-void	ft_exec_command(int index, char **argv, char **paths)
+void	ft_exec_command(int index, t_pipex pipex)
 {
 	char	full_path[1024];
 	char	**cmds;
 	int 	i;
 
 	i = 0;
-	cmds = ft_split(argv[index + 2], ' ');
-	while(paths[i])
+	cmds = ft_split(pipex.arg[index + 2], ' ');
+	while(pipex.paths[i])
 	{
-		ft_strlcpy(full_path, paths[i], sizeof(full_path));
+		ft_strlcpy(full_path, pipex.paths[i], sizeof(full_path));
 		ft_strlcat(full_path, "/", sizeof(full_path));
 		ft_strlcat(full_path, cmds[0], sizeof(full_path));
 		if (access(full_path, X_OK) == 0)
 		{
-			execve(full_path, cmds, NULL);
+			execve(full_path, cmds, pipex.env);
 			perror("exec failed");
 			exit(2);
 		}
 		i++;
 	}
+	printf("Cant execute %s", full_path);
+	exit(1);
 }
 
-void	ft_wait(int *pids, int cmds)
+void	ft_wait(int *pids, t_pipex pipex)
 {
 	int		i;
 	int		status;
 	pid_t	child_id;
 
 	i = 0;
-	while (i < cmds)
+	while (i < pipex.cmds)
 	{
 		child_id = waitpid(pids[i], &status, 0);
 		if (child_id == -1)
@@ -139,4 +117,29 @@ void	ft_wait(int *pids, int cmds)
 				printf("Child %d was stopped by signal %d\n", pids[i], WSTOPSIG(status));
 		i++;
 	}
+}
+
+void ft_close_parent_pipes(t_pipex pipex)
+{
+	int i;
+
+	i = 0;
+	while (i < pipex.cmds - 1)
+	{
+		close(pipex.pipes[i][1]);
+		close(pipex.pipes[i][0]);
+		i++;
+	}
+}
+
+t_pipex	ft_init_pipex(char **argv, char **envp, int cmds, char **paths)
+{
+	t_pipex	pipex;
+
+	pipex.arg = argv;
+	pipex.env = envp;
+	pipex.cmds = cmds;
+	pipex.paths = paths;
+	pipex.pipes = ft_create_pipes(cmds);
+	return (pipex);
 }

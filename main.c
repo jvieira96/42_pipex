@@ -45,16 +45,19 @@ static void	ft_files_check(char *argv[], int cmds)
 int	main(int argc, char *argv[], char *envp[])
 {
 	int 	cmds;
-	int 	**pipes;
-	char	*path;
 	char	**paths;
-	int		i = 0;
+	t_pipex	pipex;
+	int i = 0;
 
 	cmds = ft_param_size(argv) - 3;
+	if (cmds < 2)
+	{
+		ft_printf("You need at least 2 commands");
+		exit(0);
+	}
+	paths = ft_split(ft_get_path(envp), ':');
+	pipex = ft_init_pipex(argv, envp, cmds, paths);
 	ft_files_check(argv, cmds);
-	path = ft_get_path(envp);
-	paths = ft_split(path, ':');
-	pipes = ft_create_pipes(cmds);
-	ft_create_proc(cmds, pipes, argv, paths);
+	ft_create_proc(pipex);
 	return (0);
 }
