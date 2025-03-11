@@ -10,7 +10,7 @@ int ft_param_size(char *argv[])
 	return (size);
 }
 
-static void	ft_files_check(char *argv[], int cmds)
+void	ft_files_check(char *argv[], int cmds)
 {
 	int	fd;
 	int	i;
@@ -22,18 +22,12 @@ static void	ft_files_check(char *argv[], int cmds)
 	{
 		fd = open(argv[x], O_RDONLY);
 		if (fd != -1)
-		{
 			close(fd);
-			printf("File %s found\n", argv[x]);
-		}
 		else
 		{
 			fd = open(argv[x], O_CREAT | O_WRONLY, 0644);
 			if (fd != -1)
-			{
-				printf("File %s created\n", argv[x]);
 				close(fd);
-			}
 			else
 				perror("Error creating the file");
 		}
@@ -47,8 +41,9 @@ int	main(int argc, char *argv[], char *envp[])
 	int 	cmds;
 	char	**paths;
 	t_pipex	pipex;
-	int i = 0;
+	int here_doc;
 
+	here_doc = 0;
 	cmds = ft_param_size(argv) - 3;
 	if (cmds < 2)
 	{
@@ -56,8 +51,16 @@ int	main(int argc, char *argv[], char *envp[])
 		exit(0);
 	}
 	paths = ft_split(ft_get_path(envp), ':');
-	pipex = ft_init_pipex(argv, envp, cmds, paths);
+	if (ft_strncmp(argv[2], "here_doc", 8) == 0)
+	{
+		here_doc = 1;
+		cmds = cmds - 1;
+	}
+	pipex = ft_init_pipex(argv, envp, cmds, paths, here_doc);
 	ft_files_check(argv, cmds);
 	ft_create_proc(pipex);
+	ft_free_array(pipex.paths);
+	ft_free_pipes(pipex.pipes, pipex.cmds);
 	return (0);
 }
+ 
