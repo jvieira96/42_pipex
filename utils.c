@@ -63,13 +63,13 @@ void	ft_wait(int *pids, t_pipex pipex)
 		child_id = waitpid(pids[i], &status, 0);
 		if (child_id == -1)
 			perror("waitpid failed");
-		// else
-		// 	if (WIFEXITED(status))  // Child exited normally
-		// 		ft_printf("Child %d exited with status %d\n", pids[i], WEXITSTATUS(status));
-		// 	else if (WIFSIGNALED(status))  // Child was terminated by a signal
-		// 		ft_printf("Child %d was killed by signal %d\n", pids[i], WTERMSIG(status));
-		// 	else if (WIFSTOPPED(status))  // Child was stopped (not common in simple cases)
-		// 		ft_printf("Child %d was stopped by signal %d\n", pids[i], WSTOPSIG(status));
+		else
+			if (WIFEXITED(status))  // Child exited normally
+				ft_printf("Child %d exited with status %d\n", pids[i], WEXITSTATUS(status));
+			else if (WIFSIGNALED(status))  // Child was terminated by a signal
+				ft_printf("Child %d was killed by signal %d\n", pids[i], WTERMSIG(status));
+			else if (WIFSTOPPED(status))  // Child was stopped (not common in simple cases)
+				ft_printf("Child %d was stopped by signal %d\n", pids[i], WSTOPSIG(status));
 		i++;
 	}
 }
@@ -99,16 +99,17 @@ int	ft_handle_heredoc(char *delimiter)
 	}
 	while (1)
 	{
+		write(1, "pipe here doc> ", 14);
 		line = get_next_line(STDIN_FILENO);
-		if (line == NULL)
+		if (!line)
 			break;
-		if (strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+			&& line[ft_strlen(delimiter)] == '\n')
 		{
 			free(line);
 			break;
 		}
 		write(pipe_fd[1], line, ft_strlen(line));
-		write(pipe_fd[1], "\n", 1);
 		free(line);
 	}
 	close(pipe_fd[1]);

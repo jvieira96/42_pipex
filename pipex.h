@@ -35,11 +35,11 @@ int		ft_param_size(char *argv[]);
 void	ft_files_check(char *argv[], int cmds);
 
 // processes.c
-void	ft_first_child(int index, t_pipex pipex);
+void	ft_first_child(int index, t_pipex pipex, int argc);
 void	ft_middle_childs(int index, t_pipex pipex);
-void	ft_last_child(int index, t_pipex pipex);
-void	ft_handle_childs(int index, t_pipex pipex);
-void	ft_create_proc(t_pipex	pipex);
+void	ft_last_child(int index, t_pipex pipex, int argc);
+void	ft_handle_childs(int index, t_pipex pipex, int argc);
+void	ft_create_proc(t_pipex	pipex, int argc);
 
 // pipes.c
 int		**ft_create_pipes(int cmds);

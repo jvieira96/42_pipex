@@ -51,14 +51,14 @@ int	main(int argc, char *argv[], char *envp[])
 		exit(0);
 	}
 	paths = ft_split(ft_get_path(envp), ':');
-	if (ft_strncmp(argv[2], "here_doc", 8) == 0)
+	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
 	{
 		here_doc = 1;
 		cmds = cmds - 1;
 	}
 	pipex = ft_init_pipex(argv, envp, cmds, paths, here_doc);
-	ft_files_check(argv, cmds);
-	ft_create_proc(pipex);
+	// ft_files_check(argv, cmds);
+	ft_create_proc(pipex, argc);
 	ft_free_array(pipex.paths);
 	ft_free_pipes(pipex.pipes, pipex.cmds);
 	return (0);

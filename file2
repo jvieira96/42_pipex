@@ -1,1 +1,21 @@
-12
+7
+4
+3
+total 848
+-rwxr-xr-x 1 jpedro-f 2024_lisboa  27248 Mar 12 17:34 a.out
+-rw-r--r-- 1 jpedro-f 2024_lisboa   1159 Mar 11 15:52 errors.c
+-rw-r--r-- 1 jpedro-f 2024_lisboa     34 Mar 11 18:18 file1
+-rw-r--r-- 1 jpedro-f 2024_lisboa      6 Mar 12 17:49 file2
+-rw-r--r-- 1 jpedro-f 2024_lisboa      0 Mar 12 15:35 here_doc
+-rw-r--r-- 1 jpedro-f 2024_lisboa 365252 Mar 12 17:36 infile
+drwxr-xr-x 4 jpedro-f 2024_lisboa   4096 Mar 11 18:16 libft
+-rw-r--r-- 1 jpedro-f 2024_lisboa   1051 Mar 12 17:06 main.c
+-rw-r--r-- 1 jpedro-f 2024_lisboa 365252 Mar 12 17:36 outfile
+-rw-r--r-- 1 jpedro-f 2024_lisboa   1696 Mar 11 15:55 pipes.c
+-rw-r--r-- 1 jpedro-f 2024_lisboa   2027 Mar 12 16:54 pipex.h
+-rw-r--r-- 1 jpedro-f 2024_lisboa   2704 Mar 12 17:29 processes.c
+-rw-r--r-- 1 jpedro-f 2024_lisboa  64541 Feb 26 16:49 strat.png
+-rw-r--r-- 1 jpedro-f 2024_lisboa   3052 Mar 12 16:08 utils.c
+3
+5
+3
