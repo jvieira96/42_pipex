@@ -15,7 +15,6 @@
 void ft_first_child(int index, t_pipex pipex, int argc)
 {
 	int		fd;
-	int		fd2;
 
 	if (pipex.here_doc == 1)
 		fd = ft_handle_heredoc(pipex.arg[2]);
@@ -24,21 +23,15 @@ void ft_first_child(int index, t_pipex pipex, int argc)
 		fd = open(pipex.arg[1], O_RDONLY);
 		if (fd == -1)
 		{
-			perror("error opening the file");
+			perror(pipex.arg[1]);
 			exit(1);
 		}
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	if (pipex.cmds == 1)
-		ft_last_child(1, pipex, argc);
-	else
-	{
-		dup2(pipex.pipes[0][1], STDOUT_FILENO);	
-		close(pipex.pipes[0][1]);
-		ft_exec_command(index, pipex);
-	}
+	dup2(pipex.pipes[0][1], STDOUT_FILENO);	
 	close(pipex.pipes[0][1]);
+	ft_exec_command(index, pipex);
 }
 
 void ft_middle_childs(int index, t_pipex pipex)
@@ -60,7 +53,7 @@ void ft_last_child(int index, t_pipex pipex, int argc)
 		fd = open(pipex.arg[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		perror("error opening the file\n");
+		perror(pipex.arg[argc - 1]);
 		exit(3);
 	}
 	dup2(pipex.pipes[index - 1][0], STDIN_FILENO);
@@ -72,6 +65,8 @@ void ft_last_child(int index, t_pipex pipex, int argc)
 
 void	ft_handle_childs(int index, t_pipex pipex, int argc)
 {
+	if (pipex.cmds == 1)
+		ft_here_doc_special(pipex, argc);
 	if (index == 0)
 		ft_first_child(index, pipex, argc);
 	else if (index == ft_param_size(pipex.arg) - 4 - pipex.here_doc)
@@ -101,7 +96,6 @@ void	ft_create_proc(t_pipex	pipex, int argc)
 		{
 			ft_close_pipes(i, pipex);
 			ft_handle_childs(i, pipex, argc);
-			exit(1);
 		}
 		i++;
 	}

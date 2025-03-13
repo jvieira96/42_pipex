@@ -31,8 +31,8 @@ typedef struct s_pipex
 }	t_pipex;
 
 // main.c
+void	ft_wait(int *pids, t_pipex pipex);
 int		ft_param_size(char *argv[]);
-void	ft_files_check(char *argv[], int cmds);
 
 // processes.c
 void	ft_first_child(int index, t_pipex pipex, int argc);
@@ -47,14 +47,18 @@ void	ft_close_pipes(int	index, t_pipex	pipex);
 void	ft_close_parent_pipes(t_pipex pipex);
 
 // utils.c
-char	*ft_get_path(char *envp[]);
+char	*ft_get_path(char *envp[], t_pipex pipex);
 void	ft_exec_command(int index, t_pipex pipex);
-void	ft_wait(int *pids, t_pipex pipex);
-t_pipex	ft_init_pipex(char **argv, char **envp, int cmds, char **paths, int here_doc);
-int	ft_handle_heredoc(char *delimiter);
+t_pipex	ft_init_pipex(char **argv, char **envp, int cmds, int here_doc);
+int		ft_handle_heredoc(char *delimiter);
+void	ft_here_doc_special(t_pipex pipex, int argc);
 
 // erros.c
 void	ft_free_array(char **array);
 void	ft_free_pipes(int **pipes, int cmds);
+void	ft_file_check(t_pipex pipex, int argc);
+void	ft_cmds_check(int argc, t_pipex pipex);
+int		ft_exec_check(t_pipex pipex, char **cmds);
+void	ft_free_all(t_pipex);
 
 #endif

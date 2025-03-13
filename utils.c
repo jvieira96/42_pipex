@@ -11,7 +11,7 @@
 
 #include "pipex.h"
 
-char *ft_get_path(char *envp[])
+char *ft_get_path(char *envp[], t_pipex pipex)
 {
 	int i;
 
@@ -22,8 +22,9 @@ char *ft_get_path(char *envp[])
 			return (envp[i] + 5);
 		i++;
 	}
-	ft_printf("PATH VARIABLE NOT FOUND\n");
-	exit(6);
+	ft_putstr_fd("Path variable not found", 2);
+	ft_free_all(pipex);
+	exit(1);
 }
 
 void	ft_exec_command(int index, t_pipex pipex)
@@ -42,46 +43,25 @@ void	ft_exec_command(int index, t_pipex pipex)
 		if (access(full_path, X_OK) == 0)
 		{
 			execve(full_path, cmds, pipex.env);
-			perror("exec failed");
-			exit(2);
+			break;
 		}
 		i++;
 	}
-	ft_printf("Cant execute %s", full_path);
-	exit(1);
+	ft_putstr_fd("command not found: ", 2);
+	ft_putstr_fd(cmds[0], 2);
+	ft_putstr_fd("\n", 2);
+	ft_free_array(cmds);
+	exit(127);
 }
 
-void	ft_wait(int *pids, t_pipex pipex)
-{
-	int		i;
-	int		status;
-	pid_t	child_id;
-
-	i = 0;
-	while (i < pipex.cmds)
-	{
-		child_id = waitpid(pids[i], &status, 0);
-		if (child_id == -1)
-			perror("waitpid failed");
-		else
-			if (WIFEXITED(status))  // Child exited normally
-				ft_printf("Child %d exited with status %d\n", pids[i], WEXITSTATUS(status));
-			else if (WIFSIGNALED(status))  // Child was terminated by a signal
-				ft_printf("Child %d was killed by signal %d\n", pids[i], WTERMSIG(status));
-			else if (WIFSTOPPED(status))  // Child was stopped (not common in simple cases)
-				ft_printf("Child %d was stopped by signal %d\n", pids[i], WSTOPSIG(status));
-		i++;
-	}
-}
-
-t_pipex	ft_init_pipex(char **argv, char **envp, int cmds, char **paths, int here_doc)
+t_pipex	ft_init_pipex(char **argv, char **envp, int cmds, int here_doc)
 {
 	t_pipex	pipex;
 
 	pipex.arg = argv;
 	pipex.env = envp;
 	pipex.cmds = cmds;
-	pipex.paths = paths;
+	pipex.paths = NULL;
 	pipex.pipes = ft_create_pipes(cmds);
 	pipex.here_doc = here_doc;
 	return (pipex);
@@ -114,4 +94,23 @@ int	ft_handle_heredoc(char *delimiter)
 	}
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
+}
+
+void	ft_here_doc_special(t_pipex pipex, int argc)
+{
+	int fd_input;
+	int fd_output;
+
+	fd_input = ft_handle_heredoc(pipex.arg[2]);
+	dup2(fd_input, STDIN_FILENO);
+	close(fd_input);
+	fd_output = open(pipex.arg[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd_output == -1)
+	{
+		perror(pipex.arg[argc - 1]);
+		exit(3);
+	}
+	dup2(fd_output, STDOUT_FILENO);
+	close(fd_output);
+	ft_exec_command(0, pipex);	
 }
