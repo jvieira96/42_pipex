@@ -35,7 +35,7 @@ void	ft_wait(int *pids, t_pipex pipex);
 int		ft_param_size(char *argv[]);
 
 // processes.c
-void	ft_first_child(int index, t_pipex pipex, int argc);
+void	ft_first_child(int index, t_pipex pipex);
 void	ft_middle_childs(int index, t_pipex pipex);
 void	ft_last_child(int index, t_pipex pipex, int argc);
 void	ft_handle_childs(int index, t_pipex pipex, int argc);

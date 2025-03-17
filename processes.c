@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-void	ft_first_child(int index, t_pipex pipex, int argc)
+void	ft_first_child(int index, t_pipex pipex)
 {
 	int		fd;
 
@@ -68,7 +68,7 @@ void	ft_handle_childs(int index, t_pipex pipex, int argc)
 	if (pipex.cmds == 1)
 		ft_here_doc_special(pipex, argc);
 	if (index == 0)
-		ft_first_child(index, pipex, argc);
+		ft_first_child(index, pipex);
 	else if (index == ft_param_size(pipex.arg) - 4 - pipex.here_doc)
 		ft_last_child(index, pipex, argc);
 	else
