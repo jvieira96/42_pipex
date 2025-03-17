@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpedro-f <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/24 15:54:56 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/02/24 15:54:58 by jpedro-f         ###   ########.fr       */
+/*   Created: 2025/03/15 11:36:06 by joaovieira        #+#    #+#             */
+/*   Updated: 2025/03/15 11:37:48 by joaovieira       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char *ft_get_path(char *envp[], t_pipex pipex)
+char	*ft_get_path(char *envp[], t_pipex pipex)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (envp[i])
@@ -31,11 +32,11 @@ void	ft_exec_command(int index, t_pipex pipex)
 {
 	char	full_path[1024];
 	char	**cmds;
-	int 	i;
+	int		i;
 
 	i = 0;
 	cmds = ft_split(pipex.arg[index + 2 + pipex.here_doc], ' ');
-	while(pipex.paths[i])
+	while (pipex.paths[i])
 	{
 		ft_strlcpy(full_path, pipex.paths[i], sizeof(full_path));
 		ft_strlcat(full_path, "/", sizeof(full_path));
@@ -43,7 +44,7 @@ void	ft_exec_command(int index, t_pipex pipex)
 		if (access(full_path, X_OK) == 0)
 		{
 			execve(full_path, cmds, pipex.env);
-			break;
+			break ;
 		}
 		i++;
 	}
@@ -82,12 +83,12 @@ int	ft_handle_heredoc(char *delimiter)
 		write(1, "pipe here doc> ", 14);
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
-			break;
+			break ;
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
 			&& line[ft_strlen(delimiter)] == '\n')
 		{
 			free(line);
-			break;
+			break ;
 		}
 		write(pipe_fd[1], line, ft_strlen(line));
 		free(line);
@@ -98,8 +99,8 @@ int	ft_handle_heredoc(char *delimiter)
 
 void	ft_here_doc_special(t_pipex pipex, int argc)
 {
-	int fd_input;
-	int fd_output;
+	int	fd_input;
+	int	fd_output;
 
 	fd_input = ft_handle_heredoc(pipex.arg[2]);
 	dup2(fd_input, STDIN_FILENO);
@@ -112,5 +113,5 @@ void	ft_here_doc_special(t_pipex pipex, int argc)
 	}
 	dup2(fd_output, STDOUT_FILENO);
 	close(fd_output);
-	ft_exec_command(0, pipex);	
+	ft_exec_command(0, pipex);
 }

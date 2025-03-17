@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   processes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpedro-f <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:28:46 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/11 14:28:48 by jpedro-f         ###   ########.fr       */
+/*   Updated: 2025/03/15 11:34:56 by joaovieira       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void ft_first_child(int index, t_pipex pipex, int argc)
+void	ft_first_child(int index, t_pipex pipex, int argc)
 {
 	int		fd;
 
@@ -29,12 +29,12 @@ void ft_first_child(int index, t_pipex pipex, int argc)
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	dup2(pipex.pipes[0][1], STDOUT_FILENO);	
+	dup2(pipex.pipes[0][1], STDOUT_FILENO);
 	close(pipex.pipes[0][1]);
 	ft_exec_command(index, pipex);
 }
 
-void ft_middle_childs(int index, t_pipex pipex)
+void	ft_middle_childs(int index, t_pipex pipex)
 {
 	dup2(pipex.pipes[index - 1][0], STDIN_FILENO);
 	dup2(pipex.pipes[index][1], STDOUT_FILENO);
@@ -43,7 +43,7 @@ void ft_middle_childs(int index, t_pipex pipex)
 	ft_exec_command(index, pipex);
 }
 
-void ft_last_child(int index, t_pipex pipex, int argc)
+void	ft_last_child(int index, t_pipex pipex, int argc)
 {
 	int		fd;
 
@@ -78,7 +78,7 @@ void	ft_handle_childs(int index, t_pipex pipex, int argc)
 void	ft_create_proc(t_pipex	pipex, int argc)
 {
 	int	*pids;
-	int i;
+	int	i;
 
 	i = 0;
 	pids = malloc(sizeof(int) * (pipex.cmds));

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpedro-f <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:28:55 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/11 14:28:57 by jpedro-f         ###   ########.fr       */
+/*   Updated: 2025/03/15 11:33:55 by joaovieira       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int **ft_create_pipes(int cmds)
+int	**ft_create_pipes(int cmds)
 {
 	int	**pipes;
 	int	i;
@@ -27,19 +27,19 @@ int **ft_create_pipes(int cmds)
 		if (pipes[i] == NULL)
 		{
 			ft_free_pipes(pipes, cmds);
-			return NULL;
+			return (NULL);
 		}
-		if(pipe(pipes[i]) == -1)
+		if (pipe(pipes[i]) == -1)
 		{
 			ft_free_pipes(pipes, cmds);
-			return NULL;
+			return (NULL);
 		}
 		i++;
 	}
 	return (pipes);
 }
 
-void	ft_close_pipes(int	index, t_pipex	pipex)
+void	ft_close_pipes(int index, t_pipex pipex)
 {
 	int	pip;
 
@@ -54,9 +54,9 @@ void	ft_close_pipes(int	index, t_pipex	pipex)
 	}
 }
 
-void ft_close_parent_pipes(t_pipex pipex)
+void	ft_close_parent_pipes(t_pipex pipex)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < pipex.cmds - 1)

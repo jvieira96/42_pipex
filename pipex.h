@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpedro-f <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:10:37 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/02/14 20:10:39 by jpedro-f         ###   ########.fr       */
+/*   Updated: 2025/03/15 11:48:58 by joaovieira       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
-#define PIPEX_H
+# define PIPEX_H
 
-#include "libft/libft.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/wait.h>
+# include "libft/libft.h"
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <sys/wait.h>
 
 typedef struct s_pipex
 {
@@ -43,7 +43,7 @@ void	ft_create_proc(t_pipex	pipex, int argc);
 
 // pipes.c
 int		**ft_create_pipes(int cmds);
-void	ft_close_pipes(int	index, t_pipex	pipex);
+void	ft_close_pipes(int index, t_pipex pipex);
 void	ft_close_parent_pipes(t_pipex pipex);
 
 // utils.c
@@ -56,9 +56,12 @@ void	ft_here_doc_special(t_pipex pipex, int argc);
 // erros.c
 void	ft_free_array(char **array);
 void	ft_free_pipes(int **pipes, int cmds);
-void	ft_file_check(t_pipex pipex, int argc);
-void	ft_cmds_check(int argc, t_pipex pipex);
+void	ft_free_all(t_pipex pipex);
+
+// checks.c
+int		ft_check_args(char **argv, int cmds);
+int		ft_file_check(t_pipex pipex, int argc);
+int		ft_cmds_check(int argc, t_pipex pipex);
 int		ft_exec_check(t_pipex pipex, char **cmds);
-void	ft_free_all(t_pipex);
 
 #endif
