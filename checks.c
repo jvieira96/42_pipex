@@ -28,9 +28,9 @@ int	ft_check_args(char **argv, int cmds)
 		ft_putstr_fd("./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2\n", 2);
 		exit(1);
 	}
-	if (cmds < 6 && here_doc == 1)
+	if (cmds < 5 && here_doc == 1)
 	{
-		ft_putstr_fd("you need at least 6 parameters in this fashion: \n", 2);
+		ft_putstr_fd("you need at least 5 parameters in this fashion: \n", 2);
 		ft_putstr_fd(" ./pipex here_doc LIMITER cmd file\n", 2);
 		exit(2);
 	}
