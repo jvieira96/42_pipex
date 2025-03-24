@@ -42,16 +42,14 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	int		cmds;
 	t_pipex	pipex;
-	int		here_doc;
 	int		err;
 
 	cmds = ft_param_size(argv);
-	here_doc = ft_check_args(argv, cmds);
-	cmds = cmds - 3 - here_doc;
-	pipex = ft_init_pipex(argv, envp, cmds, here_doc);
+	ft_check_args(cmds);
+	cmds = cmds - 3;
+	pipex = ft_init_pipex(argv, envp, cmds);
 	pipex.paths = ft_split(ft_get_path(envp, pipex), ':');
-	err = ft_file_check(pipex, argc);
-	err = err + ft_cmds_check(argc, pipex);
+	err = ft_file_check(pipex, argc) + ft_cmds_check(argc, pipex);
 	if (err > 0)
 		ft_free_all(pipex);
 	ft_create_proc(pipex, argc);

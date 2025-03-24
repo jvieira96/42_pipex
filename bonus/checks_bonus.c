@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 int	ft_check_args(char **argv, int cmds)
 {
@@ -24,7 +24,7 @@ int	ft_check_args(char **argv, int cmds)
 	}
 	if (cmds < 5 && here_doc == 0)
 	{
-		ft_putstr_fd("you need at least 5 parameters in this fashion: \n", 2);
+		ft_putstr_fd("you need at least 6 parameters in this fashion: \n", 2);
 		ft_putstr_fd("./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2\n", 2);
 		exit(1);
 	}
@@ -98,6 +98,8 @@ int	ft_exec_check(t_pipex pipex, char **cmds)
 	int		i;
 
 	i = 0;
+	if (!cmds[0])
+		return (1);
 	while (pipex.paths[i])
 	{
 		ft_strlcpy(full_path, pipex.paths[i], sizeof(full_path));

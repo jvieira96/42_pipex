@@ -14,69 +14,76 @@
 #                                NAMES & PATHS                                 #
 #==============================================================================#
 NAME = pipex
-HEADER_PATH = pipex.h
+HEADER = pipex.h
 SRCS = main.c \
-		checks.c \
-		errors.c \
-		pipes.c \
-		processes.c \
-		utils.c
+       checks.c \
+       errors.c \
+       pipes.c \
+       processes.c \
+       utils.c
+
+BONUS = bonus/main_bonus.c \
+        bonus/checks_bonus.c \
+        bonus/errors_bonus.c \
+        bonus/pipes_bonus.c \
+        bonus/processes_bonus.c \
+        bonus/utils_bonus.c
 
 OBJS = $(SRCS:.c=.o)
+BONUS_OBJS = $(BONUS:.c=.o)
 
-LIBFT_DIR = ./libft/
-LIBFT = ./Libft/libft.a
+LIBFT_DIR = libft/
+LIBFT = $(LIBFT_DIR)/libft.a
 
 #==============================================================================#
 #                            FLAGS & COMMANDS                                  #
 #==============================================================================#
 C_COMP = cc
-
-FLAGS = -Wall -Werror -Wextra -g
-
+FLAGS = -Wall -Wextra -Werror -g
 RM = rm -f
-
+MAKE = make
 AR = ar rcs
 
-MAKE = make
 #==============================================================================#
 #                                  COLORS                                      #
 #==============================================================================#
-RED			= "\033[0;31m"
-GREEN		= "\033[0;32m"  
-YELLOW		= "\033[0;33m" 
-RESET		= "\033[0m"
+RED = "\033[0;31m"
+GREEN = "\033[0;32m"  
+YELLOW = "\033[0;33m" 
+RESET = "\033[0m"
+
 #==============================================================================#
 #                               RULES & DEPS                                   #
 #==============================================================================#
-all: $(LIBFT) $(NAME)
+all: $(NAME)
 
-%.o: %.c 
+%.o: %.c $(HEADER)
 	@$(C_COMP) $(FLAGS) -c $< -o $@
 
 $(LIBFT):
-	@$(MAKE) -C $(LIBFT_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
 
 $(NAME): $(OBJS) $(LIBFT)
-	@$(C_COMP) $(FLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
+	@$(C_COMP) $(FLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 	@echo $(GREEN) "$(NAME) was created successfully!" $(RESET)
+	@touch $(NAME)  # Marks as up to date to prevent relinking
+
+bonus: $(BONUS_OBJS) $(LIBFT)
+	@$(C_COMP) $(FLAGS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)
+	@echo $(GREEN) "Bonus $(NAME) was created successfully!" $(RESET)
+	@touch $(NAME)
+
 #==============================================================================#
 #                                  CLEAN RULES                                 #
 #==============================================================================#
 clean:
-	@$(RM) $(OBJS)
+	@$(RM) $(OBJS) $(BONUS_OBJS)
 	@echo $(RED) "All .o files were deleted!" $(RESET)
-
-cleanall: clean
-	@$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
 	@$(RM) $(NAME)
 	@echo $(RED) "$(NAME) was deleted!" $(RESET)
 
-fcleanall: cleanall fclean
-	@$(MAKE) -C $(LIBFT_DIR) fclean
-
 re: fclean all
 
-.PHONY: all clean fclean re cleanall fcleanall
+.PHONY: all clean fclean re bonus

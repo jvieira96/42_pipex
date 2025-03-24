@@ -12,29 +12,14 @@
 
 #include "pipex.h"
 
-int	ft_check_args(char **argv, int cmds)
+void	ft_check_args(int cmds)
 {
-	int	here_doc;
-
-	here_doc = 0;
-	if (cmds > 1)
+	if (cmds != 5)
 	{
-		if (ft_strncmp(argv[1], "here_doc", 8) == 0)
-			here_doc = 1;
-	}
-	if (cmds < 5 && here_doc == 0)
-	{
-		ft_putstr_fd("you need at least 5 parameters in this fashion: \n", 2);
-		ft_putstr_fd("./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2\n", 2);
+		ft_putstr_fd("you need 5 parameters in this fashion: \n", 2);
+		ft_putstr_fd("./pipex Infile cmd1 cmd2 Outfile\n", 2);
 		exit(1);
 	}
-	if (cmds < 5 && here_doc == 1)
-	{
-		ft_putstr_fd("you need at least 5 parameters in this fashion: \n", 2);
-		ft_putstr_fd(" ./pipex here_doc LIMITER cmd file\n", 2);
-		exit(2);
-	}
-	return (here_doc);
 }
 
 int	ft_file_check(t_pipex pipex, int argc)
@@ -43,17 +28,14 @@ int	ft_file_check(t_pipex pipex, int argc)
 	int	err;
 
 	err = 0;
-	if (pipex.here_doc != 1)
+	fd = open(pipex.arg[1], O_RDONLY);
+	if (fd == -1)
 	{
-		fd = open(pipex.arg[1], O_RDONLY);
-		if (fd == -1)
-		{
-			perror(pipex.arg[1 + pipex.here_doc]);
-			err++;
-		}
-		else
-			close(fd);
+		perror(pipex.arg[1]);
+		err++;
 	}
+	else
+		close(fd);    
 	fd = open(pipex.arg[argc - 1], O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
 	{
@@ -73,7 +55,7 @@ int	ft_cmds_check(int argc, t_pipex pipex)
 	int		flag;
 
 	err = 0;
-	i = 2 + pipex.here_doc;
+	i = 2;
 	while (i < argc - 1)
 	{
 		cmds = ft_split(pipex.arg[i], ' ');
@@ -98,6 +80,8 @@ int	ft_exec_check(t_pipex pipex, char **cmds)
 	int		i;
 
 	i = 0;
+	if (!cmds[0])
+		return (1);
 	while (pipex.paths[i])
 	{
 		ft_strlcpy(full_path, pipex.paths[i], sizeof(full_path));

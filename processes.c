@@ -16,16 +16,12 @@ void	ft_first_child(int index, t_pipex pipex)
 {
 	int		fd;
 
-	if (pipex.here_doc == 1)
-		fd = ft_handle_heredoc(pipex.arg[2]);
-	else
+
+	fd = open(pipex.arg[1], O_RDONLY);
+	if (fd == -1)
 	{
-		fd = open(pipex.arg[1], O_RDONLY);
-		if (fd == -1)
-		{
-			perror(pipex.arg[1]);
-			exit(1);
-		}
+		perror(pipex.arg[1]);
+		exit(1);
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
@@ -34,23 +30,11 @@ void	ft_first_child(int index, t_pipex pipex)
 	ft_exec_command(index, pipex);
 }
 
-void	ft_middle_childs(int index, t_pipex pipex)
-{
-	dup2(pipex.pipes[index - 1][0], STDIN_FILENO);
-	dup2(pipex.pipes[index][1], STDOUT_FILENO);
-	close(pipex.pipes[index - 1][0]);
-	close(pipex.pipes[index][1]);
-	ft_exec_command(index, pipex);
-}
-
 void	ft_last_child(int index, t_pipex pipex, int argc)
 {
 	int		fd;
 
-	if (pipex.here_doc == 1)
-		fd = open(pipex.arg[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else
-		fd = open(pipex.arg[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(pipex.arg[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		perror(pipex.arg[argc - 1]);
@@ -65,14 +49,10 @@ void	ft_last_child(int index, t_pipex pipex, int argc)
 
 void	ft_handle_childs(int index, t_pipex pipex, int argc)
 {
-	if (pipex.cmds == 1)
-		ft_here_doc_special(pipex, argc);
 	if (index == 0)
 		ft_first_child(index, pipex);
-	else if (index == ft_param_size(pipex.arg) - 4 - pipex.here_doc)
-		ft_last_child(index, pipex, argc);
 	else
-		ft_middle_childs(index, pipex);
+		ft_last_child(index, pipex, argc);
 }
 
 void	ft_create_proc(t_pipex	pipex, int argc)

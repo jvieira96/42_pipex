@@ -35,7 +35,7 @@ void	ft_exec_command(int index, t_pipex pipex)
 	int		i;
 
 	i = 0;
-	cmds = ft_split(pipex.arg[index + 2 + pipex.here_doc], ' ');
+	cmds = ft_split(pipex.arg[index + 2], ' ');
 	while (pipex.paths[i])
 	{
 		ft_strlcpy(full_path, pipex.paths[i], sizeof(full_path));
@@ -55,7 +55,7 @@ void	ft_exec_command(int index, t_pipex pipex)
 	exit(127);
 }
 
-t_pipex	ft_init_pipex(char **argv, char **envp, int cmds, int here_doc)
+t_pipex	ft_init_pipex(char **argv, char **envp, int cmds)
 {
 	t_pipex	pipex;
 
@@ -64,54 +64,5 @@ t_pipex	ft_init_pipex(char **argv, char **envp, int cmds, int here_doc)
 	pipex.cmds = cmds;
 	pipex.paths = NULL;
 	pipex.pipes = ft_create_pipes(cmds);
-	pipex.here_doc = here_doc;
 	return (pipex);
-}
-
-int	ft_handle_heredoc(char *delimiter)
-{
-	char	*line;
-	int		pipe_fd[2];
-
-	if (pipe(pipe_fd) == -1)
-	{
-		perror("Error creating herdoc pipe");
-		exit(1);
-	}
-	while (1)
-	{
-		write(1, "pipe here doc> ", 14);
-		line = get_next_line(STDIN_FILENO);
-		if (!line)
-			break ;
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
-			&& line[ft_strlen(delimiter)] == '\n')
-		{
-			free(line);
-			break ;
-		}
-		write(pipe_fd[1], line, ft_strlen(line));
-		free(line);
-	}
-	close(pipe_fd[1]);
-	return (pipe_fd[0]);
-}
-
-void	ft_here_doc_special(t_pipex pipex, int argc)
-{
-	int	fd_input;
-	int	fd_output;
-
-	fd_input = ft_handle_heredoc(pipex.arg[2]);
-	dup2(fd_input, STDIN_FILENO);
-	close(fd_input);
-	fd_output = open(pipex.arg[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd_output == -1)
-	{
-		perror(pipex.arg[argc - 1]);
-		exit(3);
-	}
-	dup2(fd_output, STDOUT_FILENO);
-	close(fd_output);
-	ft_exec_command(0, pipex);
 }

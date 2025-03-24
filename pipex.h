@@ -26,7 +26,6 @@ typedef struct s_pipex
 	char	**arg;
 	char	**paths;
 	int		**pipes;
-	int		here_doc;
 	int		cmds;
 }	t_pipex;
 
@@ -49,9 +48,7 @@ void	ft_close_parent_pipes(t_pipex pipex);
 // utils.c
 char	*ft_get_path(char *envp[], t_pipex pipex);
 void	ft_exec_command(int index, t_pipex pipex);
-t_pipex	ft_init_pipex(char **argv, char **envp, int cmds, int here_doc);
-int		ft_handle_heredoc(char *delimiter);
-void	ft_here_doc_special(t_pipex pipex, int argc);
+t_pipex	ft_init_pipex(char **argv, char **envp, int cmds);
 
 // erros.c
 void	ft_free_array(char **array);
@@ -59,7 +56,7 @@ void	ft_free_pipes(int **pipes, int cmds);
 void	ft_free_all(t_pipex pipex);
 
 // checks.c
-int		ft_check_args(char **argv, int cmds);
+void	ft_check_args(int cmds);
 int		ft_file_check(t_pipex pipex, int argc);
 int		ft_cmds_check(int argc, t_pipex pipex);
 int		ft_exec_check(t_pipex pipex, char **cmds);
