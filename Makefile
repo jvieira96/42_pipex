@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    makefile                                           :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 17:11:13 by jpedro-f          #+#    #+#              #
-#    Updated: 2025/03/25 19:10:08 by jpedro-f         ###   ########.fr        #
+#    Updated: 2025/03/26 16:36:02 by jpedro-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,10 @@
 #==============================================================================#
 NAME = pipex
 
+BONUS_NAME = pipex_bonus
+
 HEADER = pipex.h \
-		pipes_bonus.h
+		pipex_bonus.h
 
 SRCS = main.c \
        checks.c \
@@ -62,6 +64,8 @@ RESET = "\033[0m"
 #==============================================================================#
 all: $(NAME)
 
+bonus: $(BONUS_NAME)
+
 %.o: %.c $(HEADER)
 	@$(C_COMP) $(FLAGS) -c $< -o $@
 
@@ -74,20 +78,20 @@ $(NAME): $(OBJS) $(LIBFT)
 	@echo $(GREEN) "$(NAME) was created successfully!" $(RESET)
 	@touch $(NAME)  # Marks as up to date to prevent relinking
 
-bonus: $(BONUS_OBJS) $(LIBFT)
-	@$(C_COMP) $(FLAGS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)_bonus
-	@echo $(GREEN) "Bonus $(NAME) was created successfully!" $(RESET)
-	@touch $(NAME)
-
+$(BONUS_NAME): $(BONUS_OBJS) $(LIBFT)
+	@$(C_COMP) $(FLAGS) $(BONUS_OBJS) $(LIBFT) -o $(BONUS_NAME)
+	@echo $(GREEN) "Bonus $(BONUS_NAME) was created successfully!" $(RESET)
 #==============================================================================#
 #                                  CLEAN RULES                                 #
 #==============================================================================#
 clean:
 	@$(RM) $(OBJS) $(BONUS_OBJS)
+	@$(MAKE) -C $(LIBFT_DIR) clean
 	@echo $(RED) "All .o files were deleted!" $(RESET)
 
 fclean: clean
-	@$(RM) $(NAME)
+	@$(RM) $(NAME) $(BONUS_NAME) $(LIBFT)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
 	@echo $(RED) "$(NAME) was deleted!" $(RESET)
 
 re: fclean all

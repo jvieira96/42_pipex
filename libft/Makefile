@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jpedro-f <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/30 11:24:47 by jpedro-f          #+#    #+#              #
-#    Updated: 2024/10/30 11:24:49 by jpedro-f         ###   ########.fr        #
+#    Updated: 2025/03/26 18:33:30 by jpedro-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,8 +29,10 @@ ft_substr.c ft_strjoin.c ft_memmove.c ft_strtrim.c ft_putchar_fd.c ft_putstr_fd.
 ft_putendl_fd.c ft_striteri.c ft_itoa.c ft_split.c ft_strmapi.c
 
 # Add all .c files from ft_get_next_line and ft_printf
-SRCS += $(wildcard ft_get_next_line/*.c)
-SRCS += $(wildcard ft_printf/*.c)
+SRCS += ft_get_next_line/get_next_line_bonus.c ft_get_next_line/get_next_line_utils_bonus.c
+
+SRCS += ft_printf/ft_printf.c ft_printf/print_char.c ft_printf/print_hexa.c \
+ft_printf/print_nbr.c ft_printf/print_ptr.c ft_printf/print_str.c ft_printf/print_unbr.c
 
 BONUS_SRCS = ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c ft_lstadd_back.c \
 ft_lstdelone.c ft_lstclear.c ft_lstiter.c ft_lstmap.c
@@ -38,6 +40,15 @@ ft_lstdelone.c ft_lstclear.c ft_lstiter.c ft_lstmap.c
 # Object files
 OBJS = $(SRCS:.c=.o)
 BONUS_OBJS = $(BONUS_SRCS:.c=.o)
+
+#==============================================================================#
+#                                  COLORS                                      #
+#==============================================================================#
+RED = "\033[0;31m"
+GREEN = "\033[0;32m"  
+YELLOW = "\033[0;33m" 
+RESET = "\033[0m"
+
 
 # all rule
 all: $(NAME)
@@ -60,12 +71,12 @@ bonus: $(NAME) $(BONUS_OBJS)
 
 # clean rule removes .o from srcs
 clean:
-	rm -rf $(OBJS) $(BONUS_OBJS)
-
+	@rm -rf $(OBJS) $(BONUS_OBJS)
+	
 # fclean rule runs clean then removes libft.a
 fclean: clean 
-	rm -rf $(NAME)
-
+	@rm -rf $(NAME)
+	
 # re rule runs fclean then runs make again
 re: fclean
 	make && make bonus

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
+/*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 11:36:06 by joaovieira        #+#    #+#             */
-/*   Updated: 2025/03/15 11:37:48 by joaovieira       ###   ########.fr       */
+/*   Updated: 2025/03/26 19:04:01 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_get_path(char *envp[], t_pipex pipex)
 	}
 	ft_putstr_fd("Path variable not found", 2);
 	ft_free_all(pipex);
-	exit(1);
+	exit(0);
 }
 
 void	ft_exec_command(int index, t_pipex pipex)

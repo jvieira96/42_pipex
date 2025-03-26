@@ -6,7 +6,7 @@
 /*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 11:44:58 by joaovieira        #+#    #+#             */
-/*   Updated: 2025/03/26 00:55:26 by jpedro-f         ###   ########.fr       */
+/*   Updated: 2025/03/26 19:02:12 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_check_args(int cmds)
 	{
 		ft_putstr_fd("you need 5 parameters in this fashion: \n", 2);
 		ft_putstr_fd("./pipex Infile cmd1 cmd2 Outfile\n", 2);
-		exit(1);
+		exit(0);
 	}
 }
 
