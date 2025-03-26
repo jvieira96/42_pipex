@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   processes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
+/*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:28:46 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/15 11:34:56 by joaovieira       ###   ########.fr       */
+/*   Updated: 2025/03/26 00:56:01 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	ft_first_child(int index, t_pipex pipex)
 {
 	int		fd;
-
 
 	fd = open(pipex.arg[1], O_RDONLY);
 	if (fd == -1)

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jpedro-f <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 17:11:13 by jpedro-f          #+#    #+#              #
-#    Updated: 2025/03/17 17:11:20 by jpedro-f         ###   ########.fr        #
+#    Updated: 2025/03/25 19:10:08 by jpedro-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,10 @@
 #                                NAMES & PATHS                                 #
 #==============================================================================#
 NAME = pipex
-HEADER = pipex.h
+
+HEADER = pipex.h \
+		pipes_bonus.h
+
 SRCS = main.c \
        checks.c \
        errors.c \
@@ -30,9 +33,11 @@ BONUS = bonus/main_bonus.c \
         bonus/utils_bonus.c
 
 OBJS = $(SRCS:.c=.o)
+
 BONUS_OBJS = $(BONUS:.c=.o)
 
 LIBFT_DIR = libft/
+
 LIBFT = $(LIBFT_DIR)/libft.a
 
 #==============================================================================#
@@ -61,7 +66,8 @@ all: $(NAME)
 	@$(C_COMP) $(FLAGS) -c $< -o $@
 
 $(LIBFT):
-	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS) $(LIBFT)
 	@$(C_COMP) $(FLAGS) $(OBJS) $(LIBFT) -o $(NAME)
@@ -69,7 +75,7 @@ $(NAME): $(OBJS) $(LIBFT)
 	@touch $(NAME)  # Marks as up to date to prevent relinking
 
 bonus: $(BONUS_OBJS) $(LIBFT)
-	@$(C_COMP) $(FLAGS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)
+	@$(C_COMP) $(FLAGS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)_bonus
 	@echo $(GREEN) "Bonus $(NAME) was created successfully!" $(RESET)
 	@touch $(NAME)
 

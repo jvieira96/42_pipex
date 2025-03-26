@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
+/*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 11:44:58 by joaovieira        #+#    #+#             */
-/*   Updated: 2025/03/15 11:47:11 by joaovieira       ###   ########.fr       */
+/*   Updated: 2025/03/26 00:55:26 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ft_file_check(t_pipex pipex, int argc)
 		err++;
 	}
 	else
-		close(fd);    
+		close(fd);
 	fd = open(pipex.arg[argc - 1], O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
 	{
