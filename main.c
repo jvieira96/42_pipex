@@ -3,29 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
+/*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/15 11:30:18 by joaovieira        #+#    #+#             */
-/*   Updated: 2025/03/15 11:48:31 by joaovieira       ###   ########.fr       */
+/*   Created: 2025/03/27 20:51:31 by jpedro-f          #+#    #+#             */
+/*   Updated: 2025/03/27 23:27:34 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_wait(int *pids, t_pipex pipex)
+int	ft_wait(t_pipex *pipex)
 {
 	int		i;
 	int		status;
 	pid_t	child_id;
+	int		last_status;
 
+	last_status = 0;
 	i = 0;
-	while (i < pipex.cmds)
+	while (i < pipex->cmds)
 	{
-		child_id = waitpid(pids[i], &status, 0);
+		child_id = waitpid(pipex->pids[i], &status, 0);
 		if (child_id == -1)
 			perror("waitpid failed");
+		if (WIFEXITED(status))
+			last_status = WEXITSTATUS(status);
 		i++;
 	}
+	return (last_status);
 }
 
 int	ft_param_size(char *argv[])
@@ -38,22 +43,32 @@ int	ft_param_size(char *argv[])
 	return (size);
 }
 
+void	ft_check_args(int cmds)
+{
+	if (cmds != 5)
+	{
+		ft_putstr_fd("you need 5 parameters in this fashion: \n", 2);
+		ft_putstr_fd("./pipex Infile cmd1 cmd2 Outfile\n", 2);
+		exit(EXIT_FAILURE);
+	}
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	int		cmds;
-	t_pipex	pipex;
+	t_pipex	*pipex;
 	int		err;
+	int		last_exit_status;
 
 	cmds = ft_param_size(argv);
 	ft_check_args(cmds);
 	cmds = cmds - 3;
 	pipex = ft_init_pipex(argv, envp, cmds);
-	pipex.paths = ft_split(ft_get_path(envp, pipex), ':');
-	err = ft_file_check(pipex, argc) + ft_cmds_check(argc, pipex);
-	if (err > 0)
-		ft_free_all(pipex);
-	ft_create_proc(pipex, argc);
-	ft_free_array(pipex.paths);
-	ft_free_pipes(pipex.pipes, pipex.cmds);
+	pipex->paths = ft_split(ft_get_path(envp, pipex), ':');
+	pipex = ft_create_proc(pipex, argc);
+	ft_close_parent_pipes(pipex);
+	last_exit_status = ft_wait(pipex);
+	ft_free_all(pipex);
+	exit(last_exit_status);
 	return (0);
 }

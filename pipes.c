@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
+/*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 14:28:55 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/15 11:33:55 by joaovieira       ###   ########.fr       */
+/*   Created: 2025/03/27 20:52:19 by jpedro-f          #+#    #+#             */
+/*   Updated: 2025/03/27 23:16:17 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,30 +39,30 @@ int	**ft_create_pipes(int cmds)
 	return (pipes);
 }
 
-void	ft_close_pipes(int index, t_pipex pipex)
+void	ft_close_pipes(int index, t_pipex *pipex)
 {
 	int	pip;
 
 	pip = 0;
-	while (pip < pipex.cmds - 1)
+	while (pip < pipex->cmds - 1)
 	{
 		if (pip + 1 != index)
-			close(pipex.pipes[pip][0]);
+			close(pipex->pipes[pip][0]);
 		if (pip != index)
-			close(pipex.pipes[pip][1]);
+			close(pipex->pipes[pip][1]);
 		pip++;
 	}
 }
 
-void	ft_close_parent_pipes(t_pipex pipex)
+void	ft_close_parent_pipes(t_pipex *pipex)
 {
 	int	i;
 
 	i = 0;
-	while (i < pipex.cmds - 1)
+	while (i < pipex->cmds - 1)
 	{
-		close(pipex.pipes[i][1]);
-		close(pipex.pipes[i][0]);
+		close(pipex->pipes[i][1]);
+		close(pipex->pipes[i][0]);
 		i++;
 	}
 }

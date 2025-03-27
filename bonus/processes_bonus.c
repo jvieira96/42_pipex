@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   processes.c                                        :+:      :+:    :+:   */
+/*   processes_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
+/*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:28:46 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/15 11:34:56 by joaovieira       ###   ########.fr       */
+/*   Updated: 2025/03/27 21:20:39 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	ft_first_child(int index, t_pipex pipex)
 		if (fd == -1)
 		{
 			perror(pipex.arg[1]);
-			exit(1);
+			close(pipex.pipes[0][1]);
+			return ;
 		}
 	}
 	dup2(fd, STDIN_FILENO);
@@ -54,7 +55,8 @@ void	ft_last_child(int index, t_pipex pipex, int argc)
 	if (fd == -1)
 	{
 		perror(pipex.arg[argc - 1]);
-		exit(3);
+		close(pipex.pipes[index - 1][0]);
+		return ;
 	}
 	dup2(pipex.pipes[index - 1][0], STDIN_FILENO);
 	dup2(fd, STDOUT_FILENO);
@@ -77,29 +79,27 @@ void	ft_handle_childs(int index, t_pipex pipex, int argc)
 
 void	ft_create_proc(t_pipex	pipex, int argc)
 {
-	int	*pids;
 	int	i;
 
 	i = 0;
-	pids = malloc(sizeof(int) * (pipex.cmds));
-	if (pids == NULL)
+	pipex.pids = malloc(sizeof(int) * (pipex.cmds));
+	if (pipex.pids == NULL)
 		exit(1);
 	while (i < pipex.cmds)
 	{
-		pids[i] = fork();
-		if (pids[i] == -1)
+		pipex.pids[i] = fork();
+		if (pipex.pids[i] == -1)
 		{
-			free(pids);
+			free(pipex.pids);
 			exit(1);
 		}
-		if (pids[i] == 0)
+		if (pipex.pids[i] == 0)
 		{
 			ft_close_pipes(i, pipex);
 			ft_handle_childs(i, pipex, argc);
+			ft_free_all(pipex);
+			exit(EXIT_FAILURE);
 		}
 		i++;
 	}
-	ft_close_parent_pipes(pipex);
-	ft_wait(pids, pipex);
-	free(pids);
 }

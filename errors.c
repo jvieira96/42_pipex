@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 14:50:12 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/26 19:26:40 by jpedro-f         ###   ########.fr       */
+/*   Created: 2025/03/27 20:52:03 by jpedro-f          #+#    #+#             */
+/*   Updated: 2025/03/27 23:27:41 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ void	ft_free_pipes(int **pipes, int cmds)
 	free(pipes);
 }
 
-void	ft_free_all(t_pipex pipex)
+void	ft_free_all(t_pipex *pipex)
 {
-	ft_close_parent_pipes(pipex);
-	ft_free_array(pipex.paths);
-	ft_free_pipes(pipex.pipes, pipex.cmds);
-	exit(1);
+	free(pipex->pids);
+	ft_free_array(pipex->paths);
+	ft_free_pipes(pipex->pipes, pipex->cmds);
+	free(pipex);
 }

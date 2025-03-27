@@ -6,7 +6,7 @@
 #    By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 17:11:13 by jpedro-f          #+#    #+#              #
-#    Updated: 2025/03/26 16:36:02 by jpedro-f         ###   ########.fr        #
+#    Updated: 2025/03/27 21:17:59 by jpedro-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,14 +21,12 @@ HEADER = pipex.h \
 		pipex_bonus.h
 
 SRCS = main.c \
-       checks.c \
        errors.c \
        pipes.c \
        processes.c \
        utils.c
 
 BONUS = bonus/main_bonus.c \
-        bonus/checks_bonus.c \
         bonus/errors_bonus.c \
         bonus/pipes_bonus.c \
         bonus/processes_bonus.c \

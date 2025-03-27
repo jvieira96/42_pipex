@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaovieira <joaovieira@student.42.fr>      +#+  +:+       +#+        */
+/*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:10:37 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/15 11:48:58 by joaovieira       ###   ########.fr       */
+/*   Updated: 2025/03/27 23:00:10 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,15 @@ typedef struct s_pipex
 	char	**arg;
 	char	**paths;
 	int		**pipes;
+	int		*pids;
 	int		here_doc;
 	int		cmds;
 }	t_pipex;
 
 // main.c
-void	ft_wait(int *pids, t_pipex pipex);
+int		ft_wait(t_pipex pipex);
+int		ft_param_size(char *argv[]);	
+int		ft_check_args(char **argv, int cmds);
 int		ft_param_size(char *argv[]);
 
 // processes.c
@@ -57,11 +60,6 @@ void	ft_here_doc_special(t_pipex pipex, int argc);
 void	ft_free_array(char **array);
 void	ft_free_pipes(int **pipes, int cmds);
 void	ft_free_all(t_pipex pipex);
-
-// checks.c
-int		ft_check_args(char **argv, int cmds);
-int		ft_file_check(t_pipex pipex, int argc);
-int		ft_cmds_check(int argc, t_pipex pipex);
-int		ft_exec_check(t_pipex pipex, char **cmds);
+void	ft_comnmand_not_found(char **cmds);
 
 #endif
