@@ -6,7 +6,7 @@
 /*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 20:51:54 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/27 23:23:37 by jpedro-f         ###   ########.fr       */
+/*   Updated: 2025/03/28 14:49:40 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_handle_childs(int index, t_pipex *pipex, int argc)
 t_pipex	*ft_create_proc(t_pipex	*pipex, int argc)
 {
 	int	i;
-	
+
 	i = 0;
 	pipex->pids = malloc(sizeof(int) * (pipex->cmds));
 	if (pipex->pids == NULL)
@@ -83,34 +83,3 @@ t_pipex	*ft_create_proc(t_pipex	*pipex, int argc)
 	}
 	return (pipex);
 }
-
-
-
-
-// void	ft_create_proc(t_pipex	pipex, int argc)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	pipex.pids = malloc(sizeof(int) * (pipex.cmds));
-// 	if (pipex.pids == NULL)
-// 		exit(EXIT_FAILURE);
-// 	while (i < pipex.cmds)
-// 	{
-// 		pipex.pids[i] = fork();
-// 		if (pipex.pids[i] == -1)
-// 		{
-// 			free(pipex.pids);
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		if (pipex.pids[i] == 0)
-// 		{
-// 			ft_close_pipes(i, pipex);
-// 			ft_handle_childs(i, pipex, argc);
-// 			printf("error\n");
-// 			ft_free_all(pipex);
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		i++;
-// 	}
-// }

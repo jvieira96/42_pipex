@@ -6,7 +6,7 @@
 /*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 20:52:09 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/27 23:19:30 by jpedro-f         ###   ########.fr       */
+/*   Updated: 2025/03/28 15:48:47 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,6 @@ t_pipex	*ft_init_pipex(char **argv, char **envp, int cmds);
 void	ft_free_array(char **array);
 void	ft_free_pipes(int **pipes, int cmds);
 void	ft_free_all(t_pipex *pipex);
+void	ft_free_cmds(char **cmds, t_pipex *pipex);
 
 #endif

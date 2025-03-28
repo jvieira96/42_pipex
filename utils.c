@@ -6,7 +6,7 @@
 /*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 20:52:38 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/27 23:26:11 by jpedro-f         ###   ########.fr       */
+/*   Updated: 2025/03/28 16:02:39 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,11 @@ void	ft_exec_command(int index, t_pipex *pipex)
 
 	i = 0;
 	cmds = ft_split(pipex->arg[index + 2], ' ');
-	if (!cmds[i])
+	if (!cmds || !cmds[0])
 	{
-		ft_free_array(cmds);
-		return ;
+		ft_comnmand_not_found(cmds);
+		ft_free_cmds(cmds, pipex);
+		exit (127);
 	}
 	while (pipex->paths[i])
 	{
@@ -51,14 +52,18 @@ void	ft_exec_command(int index, t_pipex *pipex)
 		i++;
 	}
 	ft_comnmand_not_found(cmds);
-	ft_free_array(cmds);
-	ft_free_all(pipex);
+	ft_free_cmds(cmds, pipex);
 	exit(127);
 }
 
 void	ft_comnmand_not_found(char **cmds)
 {
-	ft_putstr_fd("command not found: ", 2);
+	if (!cmds || !cmds[0])
+	{
+		ft_putstr_fd("command not found: \n", 2);
+		return ;
+	}
+	ft_putstr_fd("command not found: \n", 2);
 	ft_putstr_fd(cmds[0], 2);
 	ft_putstr_fd("\n", 2);
 }
