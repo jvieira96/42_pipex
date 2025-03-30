@@ -6,7 +6,7 @@
 #    By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 17:11:13 by jpedro-f          #+#    #+#              #
-#    Updated: 2025/03/28 16:05:42 by jpedro-f         ###   ########.fr        #
+#    Updated: 2025/03/30 19:39:37 by jpedro-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,6 @@
 #                                NAMES & PATHS                                 #
 #==============================================================================#
 NAME = pipex
-
-BONUS_NAME = pipex_bonus
 
 HEADER = pipex.h \
 		pipex_bonus.h
@@ -44,7 +42,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 #                            FLAGS & COMMANDS                                  #
 #==============================================================================#
 C_COMP = cc
-FLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g
 RM = rm -f
 MAKE = make
 AR = ar rcs
@@ -62,34 +60,35 @@ RESET = "\033[0m"
 #==============================================================================#
 all: $(NAME)
 
-bonus: $(BONUS_NAME)
+bonus: $(LIBFT) $(BONUS_OBJS)
+	@if [ -f $(NAME) ]; then $(RM) $(NAME); fi  # Delete pipex only if it exists
+	$(C_COMP) $(CFLAGS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)
+	@echo $(GREEN) "Bonus version of $(NAME) was created successfully!" $(RESET)
+	@touch $(NAME)  # Marks it as up-to-date
 
 %.o: %.c $(HEADER)
-	@$(C_COMP) $(FLAGS) -c $< -o $@
+	$(C_COMP) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
-	@$(MAKE) -C $(LIBFT_DIR) fclean
-	@$(MAKE) -C $(LIBFT_DIR)
+	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS) $(LIBFT)
-	@$(C_COMP) $(FLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	@if [ -f $(NAME) ]; then $(RM) $(NAME); fi  # Delete pipex if it was created by bonus
+	$(C_COMP) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 	@echo $(GREEN) "$(NAME) was created successfully!" $(RESET)
-	@touch $(NAME)  # Marks as up to date to prevent relinking
+	@touch $(NAME)  # Marks it as up-to-date
 
-$(BONUS_NAME): $(BONUS_OBJS) $(LIBFT)
-	@$(C_COMP) $(FLAGS) $(BONUS_OBJS) $(LIBFT) -o $(BONUS_NAME)
-	@echo $(GREEN) "Bonus $(BONUS_NAME) was created successfully!" $(RESET)
 #==============================================================================#
 #                                  CLEAN RULES                                 #
 #==============================================================================#
 clean:
-	@$(RM) $(OBJS) $(BONUS_OBJS)
-	@$(MAKE) -C $(LIBFT_DIR) clean
+	$(RM) $(OBJS) $(BONUS_OBJS)
+	$(MAKE) -C $(LIBFT_DIR) clean
 	@echo $(RED) "All .o files were deleted!" $(RESET)
 
 fclean: clean
-	@$(RM) $(NAME) $(BONUS_NAME) $(LIBFT)
-	@$(MAKE) -C $(LIBFT_DIR) fclean
+	$(RM) $(NAME) $(LIBFT)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 	@echo $(RED) "$(NAME) was deleted!" $(RESET)
 
 re: fclean all

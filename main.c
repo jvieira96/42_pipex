@@ -6,7 +6,7 @@
 /*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 20:51:31 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/03/28 12:43:41 by jpedro-f         ###   ########.fr       */
+/*   Updated: 2025/03/30 19:09:54 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	int		cmds;
 	t_pipex	*pipex;
-	int		err;
 	int		last_exit_status;
 
 	cmds = ft_param_size(argv);
