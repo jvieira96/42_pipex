@@ -6,7 +6,7 @@
 #    By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 17:11:13 by jpedro-f          #+#    #+#              #
-#    Updated: 2025/03/30 19:39:37 by jpedro-f         ###   ########.fr        #
+#    Updated: 2025/03/31 17:29:15 by jpedro-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,18 +24,16 @@ SRCS = main.c \
        processes.c \
        utils.c
 
-BONUS = bonus/main_bonus.c \
-        bonus/errors_bonus.c \
-        bonus/pipes_bonus.c \
-        bonus/processes_bonus.c \
-        bonus/utils_bonus.c
+BONUS_SRCS = bonus/main_bonus.c \
+             bonus/errors_bonus.c \
+             bonus/pipes_bonus.c \
+             bonus/processes_bonus.c \
+             bonus/utils_bonus.c
 
 OBJS = $(SRCS:.c=.o)
-
-BONUS_OBJS = $(BONUS:.c=.o)
+BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 
 LIBFT_DIR = libft/
-
 LIBFT = $(LIBFT_DIR)/libft.a
 
 #==============================================================================#
@@ -45,7 +43,6 @@ C_COMP = cc
 CFLAGS = -Wall -Wextra -Werror -g
 RM = rm -f
 MAKE = make
-AR = ar rcs
 
 #==============================================================================#
 #                                  COLORS                                      #
@@ -58,39 +55,49 @@ RESET = "\033[0m"
 #==============================================================================#
 #                               RULES & DEPS                                   #
 #==============================================================================#
-all: $(NAME)
 
-bonus: $(LIBFT) $(BONUS_OBJS)
-	@if [ -f $(NAME) ]; then $(RM) $(NAME); fi  # Delete pipex only if it exists
-	$(C_COMP) $(CFLAGS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)
-	@echo $(GREEN) "Bonus version of $(NAME) was created successfully!" $(RESET)
-	@touch $(NAME)  # Marks it as up-to-date
+all:
+	@if [ ! -f "$(NAME)" ]; then \
+		$(MAKE) normal_build; \
+	else \
+		echo $(YELLOW) "$(NAME) already exists!" $(RESET); \
+	fi
+
+bonus:
+	@if [ ! -f "$(NAME)" ]; then \
+		$(MAKE) bonus_build; \
+	else \
+		echo $(YELLOW) "$(NAME) already exists!" $(RESET); \
+	fi
+
+normal_build: $(OBJS) $(LIBFT)
+	@$(C_COMP) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	@echo $(GREEN) "$(NAME) (normal version) was created successfully!" $(RESET)
+
+bonus_build: $(BONUS_OBJS) $(LIBFT)
+	@$(C_COMP) $(CFLAGS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)
+	@echo $(GREEN) "$(NAME) (bonus version) was created successfully!" $(RESET)
 
 %.o: %.c $(HEADER)
-	$(C_COMP) $(CFLAGS) -c $< -o $@
+	@$(C_COMP) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
-
-$(NAME): $(OBJS) $(LIBFT)
-	@if [ -f $(NAME) ]; then $(RM) $(NAME); fi  # Delete pipex if it was created by bonus
-	$(C_COMP) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
-	@echo $(GREEN) "$(NAME) was created successfully!" $(RESET)
-	@touch $(NAME)  # Marks it as up-to-date
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(MAKE) -C $(LIBFT_DIR)
 
 #==============================================================================#
 #                                  CLEAN RULES                                 #
 #==============================================================================#
 clean:
-	$(RM) $(OBJS) $(BONUS_OBJS)
-	$(MAKE) -C $(LIBFT_DIR) clean
-	@echo $(RED) "All .o files were deleted!" $(RESET)
+	@$(RM) $(OBJS) $(BONUS_OBJS)
+	@$(MAKE) -C $(LIBFT_DIR) clean
+	@echo $(RED) "All object files were deleted!" $(RESET)
 
 fclean: clean
-	$(RM) $(NAME) $(LIBFT)
-	$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(RM) $(NAME) $(LIBFT)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
 	@echo $(RED) "$(NAME) was deleted!" $(RESET)
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus normal_build bonus_build
