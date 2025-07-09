@@ -1,29 +1,43 @@
-# Pipex
+# 🛠️ Pipex - 42 School Project
 
+## 📋 Project Overview
 
-**Pipex** is a project from 42 that simulates the behavior of Unix pipes by connecting multiple processes through command-line arguments. It involves creating a pipeline where the output of one command is passed as input to the next, mimicking shell pipe behavior.
+**Pipex** simulates the behavior of shell pipelines by chaining multiple commands together, connecting their inputs and outputs through pipes. The goal is to reproduce how the shell executes commands with pipes and redirections, handling file descriptors and process control in C.
 
----
-
-## Features
-
-- Execute multiple commands in a pipeline
-- Handle file input and output redirection
-- Properly manage child processes and pipes
-- Error handling for invalid commands or files
+The **bonus** extends the project to handle **here-documents** (heredoc), allowing interactive input until a delimiter is found.
 
 ---
 
-## Bonus Features
+## 💡 What I Learned
 
-- Support for **here_doc** functionality (here-document)
-- Enhanced error messages and edge case handling
-- Support for multiple pipes chaining more than two commands
+- 🧩 **Process management** using `fork()`, `execve()`, and `waitpid()`.
+- 🔄 **Pipes** (`pipe()`) for inter-process communication.
+- 📂 Handling **file descriptors**:
+  - Redirecting standard input/output (`dup2()`)
+  - Managing file opening/closing for input/output files
+- 🚨 **Error handling** and process synchronization.
+- 🔍 Parsing and executing commands using environment variables (`PATH`).
+- ⛔ Preventing **resource leaks** (closing unused pipe ends).
+- 🎯 Implementing the **here-document**
 
 ---
 
-## Technologies
+## 🛠 Technical Concepts Used
 
-- C programming language  
-- Unix system calls: `fork`, `pipe`, `execve`, `dup2`, etc.  
-- Makefile for compilation 
+- **System calls**:
+  - `fork()`, `execve()`, `pipe()`, `dup2()`, `close()`, `waitpid()`
+- **File descriptor management** for chaining commands
+- Parsing `PATH` environment variable to find command binaries
+- Managing **multiple pipes** for chaining several commands
+- Handling signals and interruptions gracefully (bonus)
+- Implementing **here-documents** to emulate shell heredoc feature (bonus)
+
+---
+
+## 🔍 Project Highlights
+
+- Built a minimal pipeline executor supporting **two or more commands**.
+- Properly redirect stdin/stdout for each command to link the pipeline.
+- Robust handling of invalid commands and error messages.
+- Bonus: Implemented **here-document (heredoc)** feature allowing input until a delimiter is encountered.
+- Support for edge cases like empty commands, missing files, or permission errors.
